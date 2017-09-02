@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="referrer" content="no-referrer">
+<meta name="author" content="Luiz Bon">
+<meta name="description" content="This year I worked as a volunteer at NDC Sydney, and since I was involved with it, I decided to write a Bot to help attendees find sessions.
+The ChatBot started simple answering questions related to sessions and speakers. It returns an adaptive card with all information about each session.
+Having all sessions wasn&rsquo;t enough, so I added integration with QnAMaker, just in case a user asks about something not related to the sessions.">
+
+<meta property="og:title" content="Lessons learned from a conference ChatBot" />
+<meta property="og:description" content="This year I worked as a volunteer at NDC Sydney, and since I was involved with it, I decided to write a Bot to help attendees find sessions.
+The ChatBot started simple answering questions related to sessions and speakers. It returns an adaptive card with all information about each session.
+Having all sessions wasn&rsquo;t enough, so I added integration with QnAMaker, just in case a user asks about something not related to the sessions." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://luizbon.github.io/blog/lessons-learned-from-a-conference-chatbot/" />
+
+
+
+<meta property="article:published_time" content="2017-09-02T19:45:24&#43;10:00"/>
+<meta property="article:modified_time" content="2017-09-02T19:45:24&#43;10:00"/>
+
+
+
+
+
+
+
+
+
+
+
+
+<title>
+
+
+     Lessons learned from a conference ChatBot 
+
+</title>
+<link rel="canonical" href="https://luizbon.github.io/blog/lessons-learned-from-a-conference-chatbot/">
+
+
+
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/default.min.css">
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Ubuntu+Mono:400,400i,700,700i|Raleway:500">
+
+
+
+    
+    <link rel="stylesheet" href="https://luizbon.github.io/css/reset.css?t=2017-09-02%2023%3a57%3a07.8470764%20%2b1000%20AEST">
+    <link rel="stylesheet" href="https://luizbon.github.io/css/pygments.css?t=2017-09-02%2023%3a57%3a07.8470764%20%2b1000%20AEST">
+    <link rel="stylesheet" href="https://luizbon.github.io/css/main.css?t=2017-09-02%2023%3a57%3a07.8470764%20%2b1000%20AEST">
+    
+
+
+
+
+<link rel="shortcut icon"
+
+    href="https://luizbon.github.io/img/favicon.ico"
+
+>
+
+
+
+
+</head>
+
+
+<body lang="en">
+
+<section class="header">
+    <div class="container">
+        <div class="content">
+            
+            <a href="https://luizbon.github.io/"><img class="avatar" src="https://gravatar.com/avatar/d9d41c7b9862ebe28b1a369bfe2c5a30?s=50" rcset="https://gravatar.com/avatar/d9d41c7b9862ebe28b1a369bfe2c5a30?s=100 2x, https://gravatar.com/avatar/d9d41c7b9862ebe28b1a369bfe2c5a30?s=150 3x, https://gravatar.com/avatar/d9d41c7b9862ebe28b1a369bfe2c5a30?s=200 4x"></a>
+            
+            <a href="https://luizbon.github.io/"><div class="name">Luiz Bon</div></a>
+            
+            <nav>
+                <ul>
+                    
+                        <li class="nav-blog"><a href="https://luizbon.github.io/blog/"><span>Blog</span></a></li>
+                    
+                        <li class="nav-about"><a href="https://luizbon.github.io/about/"><span>About</span></a></li>
+                    
+                </ul>
+            </nav>
+        </div>
+    </div>
+</section>
+
+<section class="icons">
+    <div class="container">
+        <div class="content">
+
+        
+            <a href="//github.com/luizbon" target="_blank" rel="noopener"><img class="icon" src="https://luizbon.github.io/img/github.svg" alt="github" /></a>
+        
+
+        
+            <a href="//twitter.com/luizbon" target="_blank" rel="noopener"><img class="icon" src="https://luizbon.github.io/img/twitter.svg" alt="twitter" /></a>
+        
+
+        
+
+        
+            <a href="//linkedin.com/in/luizbon" target="_blank" rel="noopener"><img class="icon" src="https://luizbon.github.io/img/linkedin.svg" alt="linkedin" /></a>
+        
+
+        
+
+        
+
+        
+
+        
+            <a href="mailto:luiz.bon@gmail.com"><img class="icon" src="https://luizbon.github.io/img/email.svg" alt="email" /></a>
+        
+
+        
+            <a href="https://luizbon.github.io/index.xml"><img class="icon" src="https://luizbon.github.io/img/rss.svg" alt="rss" /></a>
+        
+        
+        </div>
+    </div>
+</section>
+
+
+<section class="main post non-narrow zero-top-spacing">
+    <div class="container">
+        <div class="content">
+            <div class="front-matter">
+                <div class="title-container">
+                    <div class="page-heading">
+
+    Lessons learned from a conference ChatBot
+
+</div>
+
+                    <div class="initials"><a href="https://luizbon.github.io"></a></div>
+                </div>
+                <div class="meta">
+                    
+                    <div class="date" title='Sat Sep 2 2017 19:45:24 AEST'>Sep 2, 2017</div>
+                    
+                    
+		    <div class="reading-time"><div class="middot"></div>3 minutes read</div>
+                    
+                </div>
+            </div>
+            <div class="markdown">
+                <p>This year I worked as a volunteer at <a href="https://ndcsydney.com/">NDC Sydney</a>, and since I was involved with it, I decided to write a Bot to help attendees find sessions.</p>
+
+<p>The ChatBot started simple answering questions related to sessions and speakers. It returns an <a href="http://adaptivecards.io/">adaptive card</a> with all information about each session.</p>
+
+<p>Having all sessions wasn&rsquo;t enough, so I added integration with <a href="https://qnamaker.ai/">QnAMaker</a>, just in case a user asks about something not related to the sessions.</p>
+
+<p>At this point, I wasn&rsquo;t happy yet, so I went one step further and added integration with <a href="https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/">Bing search</a> to make sure the user will always receive an answer.</p>
+
+<p>So far so good, what can go wrong? I was using adaptive cards, the content looked great, all information was there, I was covering FAQs and a fallback to Bing search.</p>
+
+<p>Before the conference starts, I asked my colleagues to test the Bot, is always good to ask someone else test your code. The testing data improved the LUIS model, and answers get better.</p>
+
+<p>That&rsquo;s when I started to realise that I needed to improve some things. The first one was the responsiveness. Yes, a ChatBot needs to be responsive. It needs to work on desktop and mobile since I wasn&rsquo;t integrating with any app, the web interface required to be responsive.</p>
+
+<p><em>So first tip</em>: <strong>A ChatBot will not save you from the multi resolution devices issue, it is a lot simpler to solve though.</strong></p>
+
+<p>With the responsiveness solved, I figured out another problem. The conference agenda has changed. Yes, this is an issue, cause I decided to use a local JSON file with all the data, this means I needed to check the whole agenda and update my file, luckily it didn&rsquo;t change much, and it was easy to update.</p>
+
+<p>At this point, I was pretty confident with the Bot, from all the feedback I received from my colleagues the major ones were easy to fix, and others were just a case to train the <a href="https://www.luis.ai/">LUIS</a> model. So I started to make improvements and have better cards which show more data from the speaker.</p>
+
+<p>When the conference started, and I was happy with the usage, till I find the first issue. The agenda has changed again. I just figured out when an attendee came to me asking about a session supposed to be in a room but was a different one. I promptly checked with the bot and the data was matching with his printed agenda, but after checking the website, I realised it was wrong again. At this point how do I update the agenda without a laptop? No luck here, I tried to stop thinking about it and enjoyed the conference. We can&rsquo;t win all the time.</p>
+
+<p>On the next day, I was free in the morning, so I brought my laptop and updated the agenda quickly, that&rsquo;s when I realised that having too much data from a session wasn&rsquo;t working well, sometimes the results weren&rsquo;t displaying correctly.</p>
+
+<p><em>Here it comes the next tip</em>: <strong>When showing multiple results, make sure they all have similar content.</strong></p>
+
+<p>This day I missed the first session working on the result cards and added another result view based on the speaker. With the new cards, the result was consistent, and the user could click on a button to show extra information.</p>
+
+<p>Overall the experience was positive, and I&rsquo;ll do it again, with some different decisions.</p>
+
+<p><em>And one last tip</em>: <strong>A conference agenda is always changing, so is the website does not use an API, make sure you have an easy way to update your data.</strong></p>
+
+                <br>
+		<p><a href="https://luizbon.github.io/blog/">Back to posts</a></p>
+            </div>
+            <br>
+            <div class="disqus">
+                <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "luizbon" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/highlight.min.js"></script>
+  
+
+  <script type="text/javascript">
+    hljs.initHighlightingOnLoad();
+  </script>
+
+
+
+
+</body>
+</html>
+
