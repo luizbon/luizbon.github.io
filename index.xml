@@ -2,30 +2,30 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Luiz Bon</title>
-    <link>https://luizbon.github.io/</link>
+    <link>https://luizbon.com/</link>
     <description>Recent content on Luiz Bon</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-AU</language>
     <lastBuildDate>Sat, 02 Sep 2017 23:47:43 +1000</lastBuildDate>
     
-	<atom:link href="https://luizbon.github.io/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://luizbon.com/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About</title>
-      <link>https://luizbon.github.io/about/</link>
+      <link>https://luizbon.com/about/</link>
       <pubDate>Sat, 02 Sep 2017 23:47:43 +1000</pubDate>
       
-      <guid>https://luizbon.github.io/about/</guid>
+      <guid>https://luizbon.com/about/</guid>
       <description>Hi! My name is Luiz Bon, I&amp;rsquo;m a Senior Developer at Readify and full time Father living in Sydney, Australia.</description>
     </item>
     
     <item>
       <title>Lessons learned from a conference ChatBot</title>
-      <link>https://luizbon.github.io/blog/lessons-learned-from-a-conference-chatbot/</link>
+      <link>https://luizbon.com/blog/lessons-learned-from-a-conference-chatbot/</link>
       <pubDate>Sat, 02 Sep 2017 19:45:24 +1000</pubDate>
       
-      <guid>https://luizbon.github.io/blog/lessons-learned-from-a-conference-chatbot/</guid>
+      <guid>https://luizbon.com/blog/lessons-learned-from-a-conference-chatbot/</guid>
       <description>This year I worked as a volunteer at NDC Sydney, and since I was involved with it, I decided to write a Bot to help attendees find sessions.
 The ChatBot started simple answering questions related to sessions and speakers. It returns an adaptive card with all information about each session.
 Having all sessions wasn&amp;rsquo;t enough, so I added integration with QnAMaker, just in case a user asks about something not related to the sessions.</description>
